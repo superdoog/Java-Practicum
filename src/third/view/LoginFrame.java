@@ -15,39 +15,38 @@ import java.awt.event.WindowEvent;
  * 登录界面
  */
 public class LoginFrame {
-	public static void main(String[] args) {
+	private JFrame jf = new JFrame("登陆界面");
+		
 
-		JFrame jf = new JFrame("登陆界面");
+	private JTextField jt1 = new JTextField("用户ID：", 5);
+	private JTextField jt2 = new JTextField("密   码 ：", 5);
+	private JTextField jtfuserID = new JTextField("", 15);
+	private JPasswordField jpfpassword = new JPasswordField("", 15);
+	private Button login = new Button("登陆");
+	private Button chongzhi = new Button("重置");
+	private Button regist = new Button("注册");
+
+	public LoginFrame(String[] args) {
 		jf.setSize(300, 150);
 		jf.setLayout(new FlowLayout());
-
-		JTextField jt1 = new JTextField("用户ID：", 5);
-		JTextField jt2 = new JTextField("密   码 ：", 5);
-		JTextField jtfusername = new JTextField("", 15);
-		JPasswordField jpfpassword = new JPasswordField("", 15);
-		Button login = new Button("登陆");
-		Button chongzhi = new Button("重置");
-		Button regist = new Button("注册");
-
 		jt1.setEditable(false);
 		jt2.setEditable(false);
 
 		jf.add(jt1);
-		jf.add(jtfusername);
+		jf.add(jtfuserID);
 		jf.add(jt2);
 		jf.add(jpfpassword);
 		jf.add(login);
 		jf.add(chongzhi);
 		jf.add(regist);
 
-		chongzhi.addActionListener(new ActionListener() {//监听重置按钮,清除文本
-
+		//监听重置按钮,清除文本
+		chongzhi.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				jtfusername.setText("");
+				jtfuserID.setText("");
 				jpfpassword.setText("");
-				jtfusername.requestFocus();
-
+				jtfuserID.requestFocus();
 			}
 		});
 
@@ -61,20 +60,22 @@ public class LoginFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String username = jtfusername.getText().trim();
-				String password = ("" + jpfpassword.getPassword()).trim();
+				String username = jtfuserID.getText().trim();
+				String password =  jpfpassword.getText().trim();
 
 				String usernameRegex = "[a-zA-Z]{5}";
-				String passwordRegex = "^.{6,12}$";
+				String passwordRegex = "\\w{6,12}";
+
 
 				if (!(username.matches(usernameRegex))) {
 					JOptionPane.showMessageDialog(jf, "用户名不满足条件(5个英文字母组成)");
-					jtfusername.setText("");
-					jtfusername.requestFocus();
+					jtfuserID.setText("");
+					jtfuserID.requestFocus();
 					return;
 				}
 				if (!(password.matches(passwordRegex))) {
 					JOptionPane.showMessageDialog(jf, "密码不满足条件(6~12个任意字符)");
+					System.out.println(password);
 					jpfpassword.setText("");
 					jpfpassword.requestFocus();
 					return;
@@ -86,24 +87,24 @@ public class LoginFrame {
 					JOptionPane.showMessageDialog(jf, "登陆成功！");
 				} else {
 					JOptionPane.showMessageDialog(jf, "用户名或密码不正确");
-					jtfusername.setText("");
+					jtfuserID.setText("");
 					jpfpassword.setText("");
-					jtfusername.requestFocus();
+					jtfuserID.requestFocus();
 				}
 
 			}
 		});
 
+		//注册按钮 转跳到注册界面
 		regist.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegisterFrame.main(args);
 				jf.dispose();
-
 			}
 		});
 
+		//关闭窗口
 		jf.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -114,9 +115,10 @@ public class LoginFrame {
 		UiUtil.setFrameCenter(jf);
 		jf.setResizable(false);
 		jf.setVisible(true);
+		jtfuserID.requestFocus();
+	}
 
-		jtfusername.requestFocus();
-
-
+	public static void main(String[] args) {
+		new LoginFrame(args);
 	}
 }

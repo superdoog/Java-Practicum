@@ -16,7 +16,7 @@ public class RegisterFrame {
 
 	private String[] args;
 	private boolean sex;
-	private String education;
+	private String education = "小 学";
 	private JFrame jf = new JFrame("注册界面");
 	private JTextField jt1 = new JTextField("用户ID ：", 5);
 	private JTextField jt2 = new JTextField("密   码 ：", 5);
@@ -71,6 +71,7 @@ public class RegisterFrame {
 		jf.setLayout(new FlowLayout());
 
 
+		//获取性别
 		male.addActionListener(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -84,15 +85,16 @@ public class RegisterFrame {
 			}
 		});
 
+		//获取学历
 		jcbUserEducation.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if (ItemEvent.SELECTED == e.getStateChange()) {
 					education = e.getItem().toString();
 				}
-
-			}
+				}
 		});
+
 
 
 		register.addActionListener(new ActionListener() {
@@ -113,7 +115,8 @@ public class RegisterFrame {
 
 
 				String usernameRegex = "[a-zA-z]{5}";
-				String passwordRegex = "^.{6,12}$";
+				String passwordRegex = "\\w{6,12}";
+
 
 				if (!(userID.matches(usernameRegex))) {
 					JOptionPane.showMessageDialog(jf, "用户ID不满足条件(5个英文字母组成)");
@@ -147,6 +150,7 @@ public class RegisterFrame {
 			}
 		});
 
+		//取消按钮 转跳登陆界面
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -155,6 +159,7 @@ public class RegisterFrame {
 			}
 		});
 
+		//关闭窗口
 		jf.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

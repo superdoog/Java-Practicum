@@ -58,7 +58,8 @@ public class UserDaoImpl implements UserDao {
 		BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(file, true));
-			bw.write(user.getUserID() + "&" + user.getPassword() + "&" + user.getName() + "&" + user.getSex() + "&" + user.getEducation() + "&" + user.getEducation() + "&" + user.getHobby());
+			bw.write(user.getUserID() + "&" + user.getPassword() + "&" + user.getName() + "&" + user.getSex() + "&" + user.getEducation() + "&" + user.getHobby());
+			//bw.write(user.getUserID() + "=" + user.getPassword());
 			bw.newLine();
 			bw.flush();
 		} catch (Exception e) {
