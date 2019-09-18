@@ -9,7 +9,6 @@ public class ListDemo extends JPanel
 		implements ListSelectionListener {
 	private JList list;
 	private DefaultListModel listModel;
-
 	private static final String add = "添加";
 	private static final String remove = "删除";
 	private JButton removeButton;
