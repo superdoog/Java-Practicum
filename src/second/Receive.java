@@ -22,6 +22,7 @@ public class Receive implements Runnable {
 			isRunning = true;
 		}catch (IOException e){
 			System.out.println("---接收端异常---");
+			release();
 		}
 	}
 
@@ -33,6 +34,7 @@ public class Receive implements Runnable {
 
 		}catch (IOException e){
 			System.out.println("---接收端：接收错误---");
+			release();
 		}
 		return msg;
 	}
