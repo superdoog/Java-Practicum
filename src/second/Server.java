@@ -15,7 +15,7 @@ public class Server extends JFrame {
 	private static JButton sendButton;
 	private static JTextArea massage;//文本区，用来显示聊天记录
 	private static JTextArea text;//文本框，用来写留言
-	private static Choice clist;//用来罗列在线用户
+	private static JComboBox<String> clist = new JComboBox<>();//用来罗列在线用户
 	private static CopyOnWriteArrayList<Channel> all = new CopyOnWriteArrayList<Channel>();
 
 	public Server(String title){
@@ -50,8 +50,7 @@ public class Server extends JFrame {
 		text = new JTextArea(3,30);
 		text.setLineWrap(true);// 激活自动换行功能
 		text.setWrapStyleWord(true);// 激活断行不断字功能
-		clist = new Choice();
-		clist.add("客户端列表");
+		clist = new JComboBox<String>();
 		sendButton = new JButton("发送");
 		p1.add(l1);
 		p1.add(text);
@@ -68,21 +67,25 @@ public class Server extends JFrame {
 
 	}
 
-	static int i;
+	static int i=0;
 	static class Channel implements Runnable {
 		private DataInputStream dis;
 		private DataOutputStream dos;
 		private Socket client;
 		private boolean isRunning;
-		static String name ="客户端"+i;
+		private String name;
 
 
 		public Channel(Socket client) {
 			this.client = client;
+			System.out.println(i);
+
 			try {
 				dis = new DataInputStream(client.getInputStream());
 				dos = new DataOutputStream(client.getOutputStream());
 				isRunning = true;
+				this.name = receive() + i++;
+
 
 			} catch (IOException e) {
 				System.out.println("---1-客户端IOException---");
@@ -106,7 +109,7 @@ public class Server extends JFrame {
 			String msg = "";
 			msg = receive();
 			if (!msg.equals("")){
-				massage.append("\r\n"+msg);
+				massage.append("\r\n" + this.name + ":" + msg);
 			}
 
 		}
@@ -126,22 +129,21 @@ public class Server extends JFrame {
 		static String clientName ="";
 		private void sendToClient(String msg) {
 
-			clist.addItemListener(new ItemListener() {
+			clist.addActionListener(new ActionListener() {
 				@Override
-				public void itemStateChanged(ItemEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					/**
-					 * 选择客户端！！！！
+					 * 选择客户端
 					 */
-					clientName = "@客户端"+clist.getSelectedItem()+":";
+					clientName = "客户端" + clist.getSelectedIndex();
 				}
 			});
-			msg = clientName + msg;
+			msg = clientName + ":" + msg;
 			int idx = msg.indexOf(":");
-			String targetName = msg.substring(1, idx);?
 			msg = msg.substring(idx + 1);
 			for (Channel other : all) {
-				if (other.name.equals(targetName)) {//目标
-					other.send("服务端：" + msg);//私聊消息
+				if (other.name.equals(clientName)) {//目标
+					other.send(msg);
 				}
 			}
 		}
@@ -162,8 +164,12 @@ public class Server extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						String msg = text.getText().trim();
-						sendToClient(msg);
-						text.setText("");
+						if (!msg.equals("")){
+							sendToClient(msg);
+							massage.append("\r\n"+msg);
+							text.setText("");
+						}
+
 					}
 				});
 
@@ -181,11 +187,10 @@ public class Server extends JFrame {
 		//2、阻塞式等待连接 accept
 		while (true) {
 			Socket client = server.accept();
-			i++;
 			System.out.println("一个客户端建立类连接");
 			Channel c = new Channel(client);
 			all.add(c);//管理所有的成员
-			clist.add(c.name);
+			clist.addItem(c.name);
 			new Thread(c).start();
 		}
 	}

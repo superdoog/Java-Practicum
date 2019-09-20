@@ -9,6 +9,7 @@ import java.io.IOException;
  * 工具类
  */
 public class Utils {
+
 	/**
 	 * 释放资源
 	 */

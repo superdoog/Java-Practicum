@@ -1,5 +1,7 @@
 package second;
 
+import first.Send;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,13 +11,23 @@ import java.net.Socket;
 
 public class Client extends JFrame {
 
-	private static JButton sendButton;
-	private static JTextArea massage;//文本区，用来显示聊天记录
-	private static JTextArea text;//文本框，用来写留言
+
+	public static JButton sendButton;
+	public static JTextArea massage;//文本区，用来显示聊天记录
+	public static JTextArea text;//文本框，用来写留言
 	private Choice clist;//用来罗列在线用户
+	public String name;
+	public void setName(String name){
+		this.name = name;
+	}
+
 
 	public Client(String title){
 		super(title);
+
+		name = "客户端";
+
+
 		this.setSize(500,500);
 		Utils.setFrameCenter(this);
 		Container con = this.getContentPane();
@@ -104,8 +116,7 @@ public class Client extends JFrame {
 			while (isRunning){
 				String msg = receive();
 				if (!msg.equals("")){
-					massage.append("\r\n");
-					massage.append(msg);
+					massage.append("\r\n服务器:"+msg);
 				}
 			}
 		}
@@ -114,16 +125,19 @@ public class Client extends JFrame {
 
 	static class Send implements Runnable {
 
+		private String cname;
 		private DataOutputStream dos;
 		private Socket client;
 		private boolean isRunning;
 
-		public Send(Socket client){
-			this.client = client;
 
+		public Send(Socket client,String name){
+			this.client = client;
+			this.cname = name;
 
 			try {
 				dos = new DataOutputStream(client.getOutputStream());
+				send(cname);
 				isRunning = true;
 			} catch (IOException e) {
 				System.out.println("---发送端异常---");
@@ -132,7 +146,7 @@ public class Client extends JFrame {
 
 		}
 
-		 public void send(String msg){
+		public void send(String msg){
 			try {
 				dos.writeUTF(msg);
 				dos.flush();
@@ -156,9 +170,12 @@ public class Client extends JFrame {
 				sendButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						String msg = text.getText().trim();
+						String msg = Client.text.getText().trim();
 						if (!msg.equals("")){
+
 							send(msg);
+
+							massage.append("\r\n"+cname+":"+msg);
 							text.setText("");
 						}
 					}
@@ -175,8 +192,11 @@ public class Client extends JFrame {
 		System.out.println("-----Client启动-----");
 		//1、建立连接：Socket创建客户端+服务器的地址和端口
 		Socket client = new Socket("localhost",8888);
+		String name = c.name;
+
+
 		//2、客户端发送消息
-		new Thread(new Send(client)).start();
+		new Thread(new Send(client,name)).start();
 		new Thread(new Receive(client)).start();
 	}
 }
