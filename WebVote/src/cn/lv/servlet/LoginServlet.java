@@ -28,9 +28,9 @@ public class LoginServlet extends HttpServlet {
 		u = DBUtils.getOneUser(sql, loginName);
 		if (null != u){
 			if (u.getPassword().equals(loginPassword)){
-				resp.getWriter().println("登陆成功！");
+				resp.getWriter().println("LOGIN SUCCESS");
 			}else {
-				resp.getWriter().println("账号或密码错误！");
+				resp.getWriter().println("LOGIN FAILED");
 			}
 		}
 
