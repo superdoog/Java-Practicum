@@ -1,7 +1,5 @@
 package second;
 
-import first.Send;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

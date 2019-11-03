@@ -1,7 +1,7 @@
 package third.dao;
 
 
-import third.pojo.User;
+		import third.pojo.User;
 
 public interface UserDao {
 	/**

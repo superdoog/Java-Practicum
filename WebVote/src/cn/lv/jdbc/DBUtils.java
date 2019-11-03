@@ -1,12 +1,19 @@
 package cn.lv.jdbc;
 
 import cn.lv.model.User;
-import com.mysql.jdbc.Connection;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import javax.sql.DataSource;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
 public class DBUtils {
+
+	private static DataSource dataSource;
+	static {
+		dataSource = new ComboPooledDataSource("mysql");
+	}
 
 	/**
 	 * 获取数据库连接的方法
@@ -14,20 +21,12 @@ public class DBUtils {
 	 * @throws Exception
 	 */
 	public static Connection getConnection() throws Exception {
-		Properties prop = new Properties();//创建Properties类的对象，vote.properties
-		//取到配置文件的内容
-		InputStream in = DBUtils.class.getClassLoader().getResourceAsStream("vote.properties");
-		prop.load(in);//把拿到的配置文件的内容，放到Properties类的对象prop
-
-		String driverClass = prop.getProperty("driverClass");//通过prop对象的getProperties方法拿到具体的值
-		String url = prop.getProperty("url");
-		String user = prop.getProperty("user");
-		String password = prop.getProperty("password");
-
-		//加载数据库驱动，给DriverManager注册数据库驱动
-		Class.forName(driverClass);//通过反射，加载数据库的驱动到DriverManager
-		//通过DriverManager的getConnection方法获取数据库的连接
-		Connection conn = (Connection) DriverManager.getConnection(url, user, password);
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return conn;
 	}
 

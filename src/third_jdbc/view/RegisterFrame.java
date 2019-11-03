@@ -4,7 +4,7 @@ import third_jdbc.dao.UserDao;
 import third_jdbc.dao.impl.UserDaoImpl;
 import third_jdbc.pojo.User;
 import third_jdbc.uti.UiUtil;
-import third_jdbc.view.LoginFrame;
+
 
 
 import javax.swing.*;

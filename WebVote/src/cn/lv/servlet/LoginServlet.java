@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author lv
+ */
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -19,8 +22,9 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		User u = new User();
-		req.setCharacterEncoding("UTF-8");//解决中文乱码
+		User u;
+		//解决中文乱码
+		req.setCharacterEncoding("UTF-8");
 		String loginName = req.getParameter("username");
 		String loginPassword = req.getParameter("password");
 
